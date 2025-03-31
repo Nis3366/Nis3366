@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_42a6dd0b0cf493ea6386fa100c55e9f7 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_42a6dd0b0cf493ea6386fa100c55e9f7" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_42a6dd0b0cf493ea6386fa100c55e9f7 = L.map(
+                "map_42a6dd0b0cf493ea6386fa100c55e9f7",
+                {
+                    center: [35.0, 105.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 5,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_99ffc514047600bd3bf4b38de28fb5bf = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_99ffc514047600bd3bf4b38de28fb5bf.addTo(map_42a6dd0b0cf493ea6386fa100c55e9f7);
+        
+    
+            var circle_marker_b14b5e3aafa8cd0650d2e80fc5c23996 = L.circleMarker(
+                [39.9042, 116.4074],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15, "stroke": true, "weight": 3}
+            ).addTo(map_42a6dd0b0cf493ea6386fa100c55e9f7);
+        
+    
+        var popup_d0a39ffdf0b8a5fea471b623a28d9733 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_09b3253f839fc960df29420c01000604 = $(`<div id="html_09b3253f839fc960df29420c01000604" style="width: 100.0%; height: 100.0%;">北京: 3次</div>`)[0];
+                popup_d0a39ffdf0b8a5fea471b623a28d9733.setContent(html_09b3253f839fc960df29420c01000604);
+            
+        
+
+        circle_marker_b14b5e3aafa8cd0650d2e80fc5c23996.bindPopup(popup_d0a39ffdf0b8a5fea471b623a28d9733)
+        ;
+
+        
+    
+    
+            var circle_marker_e6424e0f7dbdb9f3e5a8a075c3f1e2b7 = L.circleMarker(
+                [31.2304, 121.4737],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
+            ).addTo(map_42a6dd0b0cf493ea6386fa100c55e9f7);
+        
+    
+        var popup_2b8b92fa1613bf40cd6c0e23bda4100b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0105801bf04cad69ee0b662e5b276cb4 = $(`<div id="html_0105801bf04cad69ee0b662e5b276cb4" style="width: 100.0%; height: 100.0%;">上海: 2次</div>`)[0];
+                popup_2b8b92fa1613bf40cd6c0e23bda4100b.setContent(html_0105801bf04cad69ee0b662e5b276cb4);
+            
+        
+
+        circle_marker_e6424e0f7dbdb9f3e5a8a075c3f1e2b7.bindPopup(popup_2b8b92fa1613bf40cd6c0e23bda4100b)
+        ;
+
+        
+    
+    
+            var circle_marker_c2b43167a3a8164a17e011263de613c2 = L.circleMarker(
+                [23.1291, 113.2644],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_42a6dd0b0cf493ea6386fa100c55e9f7);
+        
+    
+        var popup_d24de3728c1391ecbbc7b44f0248abb5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_eb34739fd37506cc0be3e39295b9017e = $(`<div id="html_eb34739fd37506cc0be3e39295b9017e" style="width: 100.0%; height: 100.0%;">广州: 1次</div>`)[0];
+                popup_d24de3728c1391ecbbc7b44f0248abb5.setContent(html_eb34739fd37506cc0be3e39295b9017e);
+            
+        
+
+        circle_marker_c2b43167a3a8164a17e011263de613c2.bindPopup(popup_d24de3728c1391ecbbc7b44f0248abb5)
+        ;
+
+        
+    
+    
+            var circle_marker_c82caf3982c2419d5b60cb5503584b8c = L.circleMarker(
+                [22.5431, 114.0579],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_42a6dd0b0cf493ea6386fa100c55e9f7);
+        
+    
+        var popup_25fe06f97ec256a6d6c465c56ba3fd49 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0debad73a904fa83302699078ef629e9 = $(`<div id="html_0debad73a904fa83302699078ef629e9" style="width: 100.0%; height: 100.0%;">深圳: 1次</div>`)[0];
+                popup_25fe06f97ec256a6d6c465c56ba3fd49.setContent(html_0debad73a904fa83302699078ef629e9);
+            
+        
+
+        circle_marker_c82caf3982c2419d5b60cb5503584b8c.bindPopup(popup_25fe06f97ec256a6d6c465c56ba3fd49)
+        ;
+
+        
+    
+</script>
+</html>
