@@ -50,7 +50,7 @@ def get_start_time(time_interval:str, time_end:datetime,start:datetime) -> datet
     if time_interval == "hour":
         time_start =  time_end - timedelta(hours=1)
     time_start = max(time_start, start)
-    return time_end
+    return time_start
 
 class TopicPostsDownloader(BaseCrawler):
     """
@@ -171,10 +171,10 @@ class TopicPostsDownloader(BaseCrawler):
             Attention: 暂定大致两年内数据
         """
         now = datetime.now()
-        start = now - timedelta(days=365)
         if now.minute != 0 or now.second != 0 or now.microsecond != 0:
             now += timedelta(hours=1)
             now = now.replace(minute=0, second=0, microsecond=0)
+        start = now - timedelta(days=365)
         time_end = now
         time_interval = ["month","day","hour"]
         flag = await self._download_asyncio()
