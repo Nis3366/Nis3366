@@ -160,7 +160,7 @@ class TopicPostsDownloader(BaseCrawler):
             tasks = []
             for param in params:
                 async with self.semaphore:
-                    task = self._download_single_asyncio(param=param, client=client)
+                    task = self._download_single_asyncio(param=param, client=client,time_start=time_start, time_end=time_end)
                     tasks.append(task)
                     # await asyncio.sleep(round(random.uniform(0.1, 0.5), 2))
             await asyncio.gather(*tasks)
