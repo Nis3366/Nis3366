@@ -1,36 +1,41 @@
 import streamlit as st
-
-# 示例数据
-hot_topics = [
-    {"title": "热点1"},
-    {"title": "热点2"},
-    {"title": "热点3"},
-    {"title": "热点4"},
-    {"title": "热点5"},
-    {"title": "热点6"},
-    {"title": "热点7"},
-    {"title": "热点8"},
-    {"title": "热点9"},
-    {"title": "热点10"},
-]
+from Crawler.get_top_lists import get_top_lists
 
 st.title("今日热点")
+if "hot_topics" not in st.session_state:
+    st.session_state["hot_topics"] = []
 
 # 爬取微博热点的按钮
 if st.button("开始爬取今日微博热点"):
-    st.session_state["hot_topics"] = hot_topics
-    st.experimental_rerun()
+    # 模拟爬取热点数据
+    st.session_state["selected_topic"] = []
+    st.session_state["hot_topics"] = get_top_lists()
+    st.success("爬取成功！")
+    st.rerun()
+
+if "selected_topic" not in st.session_state:
+    st.session_state["selected_topic"] = []
 
 # 展示热点并添加 keepintrack 按钮
-if "hot_topics" in st.session_state:
-    for index, topic in enumerate(st.session_state["hot_topics"], start=1):
-        cols = st.columns([10, 1])
-        cols[0].write(f"{index}. {topic['title']}")
-        if cols[1].button("Keep in Track", key=f"track_{index}"):
-            st.session_state["selected_topic"] = topic
-            st.experimental_rerun()
+if st.session_state["hot_topics"]:
+    for topic in st.session_state["hot_topics"]:
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            st.write(f"{topic}:{st.session_state["hot_topics"][topic]}")
+        with col2:
+            if topic in st.session_state["selected_topic"]:
+                if st.button("撤销", key=f"untrack_{topic}"):
+                    st.session_state["selected_topic"].remove(topic)
+                    st.rerun()
+            else:
+                if st.button("keepintrack", key=f"track_{topic}"):
+                    st.session_state["selected_topic"].append(topic)
+                    st.rerun()
 
-# 跳转到数据分析页
-if "selected_topic" in st.session_state:
-    st.write("跳转到数据分析页...")
-    st.query_params(page="data_analysis")
+# 确认按钮
+if st.session_state["hot_topics"]:
+    if st.button("确认"):
+        # 将选中的话题存入数据库的逻辑
+        # 这里可以调用你的数据库存储函数
+        st.success("已确认并存入数据库")
+        print(st.session_state["selected_topic"])
