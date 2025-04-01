@@ -51,7 +51,6 @@ def get_start_time(time_interval:str, time_end:datetime,start:datetime) -> datet
         time_start =  time_end - timedelta(hours=1)
     time_start = max(time_start, start)
     return time_start
-    return time_start
 
 class TopicPostsDownloader(BaseCrawler):
     """
