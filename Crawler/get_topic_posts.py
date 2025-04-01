@@ -57,7 +57,7 @@ class TopicPostsDownloader(BaseCrawler):
         获取话题的帖子
     """
     def __init__(self,search_for:str, concurrency:int = 100):
-        table_name = "姜萍" # 处理数据表名称
+        table_name = "东部战区" # 处理数据表名称
         super().__init__(table_name = table_name, concurrency=concurrency)
 
         self.search_for = search_for

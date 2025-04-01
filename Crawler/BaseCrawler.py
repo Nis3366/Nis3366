@@ -7,7 +7,7 @@ import httpx
 from pydantic import BaseModel
 from typing import Any
 import json
-
+from .database import insert_one
 from Front_end.config_front import cookies_config
 
 class CommentID(BaseModel):
@@ -70,9 +70,10 @@ class BaseCrawler(ABC):
     async def _save_to_database_asyncio(self, items:Any) -> None:
         """保存数据到数据库
         """
-        with open(self.table_name, 'a', encoding='utf-8') as f:
-            for item in items:
-                f.write(json.dumps(item, ensure_ascii=False) + '\n')
+        for item in items:
+            document = json.dumps(item)
+            document = json.loads(document)
+            insert_one(self.table_name,document)
         
 
     def _check_response(self, response: httpx.Response) -> bool:
