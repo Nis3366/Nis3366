@@ -14,8 +14,13 @@ class CommentID(BaseModel):
     uid: str
     mid: str
 
+class CommmentResponseInfo(BaseModel):
+    max_id: str
+    total_number: int
+    data_number: int
+
 class BaseCrawler(ABC):
-    def __init__(self,table_name:str,concurrency:int = 100):
+    def __init__(self,table_name:str,concurrency:int = 20):
         self.semaphore = asyncio.Semaphore(concurrency)
         self.db = None # 数据库操作
         self.table_name = table_name # 表名
@@ -88,8 +93,9 @@ class BaseCrawler(ABC):
             params = await self._get_request_params(client=client)
             tasks = []
             for param in params:
-                task = self._download_single_asyncio(param=param, client=client)
-                tasks.append(task)
+                async with self.semaphore:
+                    task = self._download_single_asyncio(param=param, client=client)
+                    tasks.append(task)
             await asyncio.gather(*tasks)
 
 __all__ = [BaseCrawler]
