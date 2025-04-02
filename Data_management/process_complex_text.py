@@ -13,6 +13,6 @@ from modelscope.utils.constant import Tasks
 
 semantic_cls = pipeline(Tasks.text_classification, 'iic/nlp_structbert_emotion-classification_chinese-base', model_revision='v1.0.0')
 
-
 def get_emotion(text):
     return semantic_cls(input=text)
+
