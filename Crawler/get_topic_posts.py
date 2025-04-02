@@ -56,7 +56,7 @@ class TopicPostsDownloader(BaseCrawler):
     """
         获取话题的帖子
     """
-    def __init__(self,search_for:str, concurrency:int = 100):
+    def __init__(self,search_for:str, concurrency:int = 100, table_name:str = ""):
         table_name = search_for # 处理数据表名称
         super().__init__(table_name = table_name, concurrency=concurrency)
 
@@ -203,7 +203,7 @@ class TopicPostsDownloader(BaseCrawler):
 
 
 def get_topic_posts(search_for:str):
-    downloader = TopicPostsDownloader(search_for=search_for)
+    downloader = TopicPostsDownloader(search_for=search_for,table_name=search_for)
     try:
         loop = asyncio.get_event_loop()
         loop.run_until_complete(downloader._download_all_asyncio())

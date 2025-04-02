@@ -1,7 +1,6 @@
 import streamlit as st
 from Crawler.get_top_lists import get_top_lists
 from Crawler.get_topic_posts import get_topic_posts
-
 st.title("今日热点")
 if "hot_topics" not in st.session_state:
     st.session_state["hot_topics"] = []
@@ -43,12 +42,15 @@ if st.session_state["hot_topics"]:
                     st.session_state["selected_topic"].append(topic)
                     st.rerun()
 
+selected_values = [st.session_state["hot_topics"][key] 
+                  for key in st.session_state["selected_topic"] 
+                  if key in st.session_state["hot_topics"]]
+
 # 确认按钮
 if st.session_state["hot_topics"]:
     if st.button("确认"):
-        # 将选中的话题存入数据库的逻辑
-        # 这里可以调用你的数据库存储函数
-        for topic in st.session_state["selected_topic"]:
-            get_topic_posts(st.session_state["hot_topics"][topic])
+        for topic_content in selected_values:
+            get_topic_posts(topic_content)
         st.success("已确认并存入数据库")
         print(st.session_state["selected_topic"])
+
