@@ -7,9 +7,12 @@
 
 
 #StructBERT情绪分类-中文-七分类-base
+
 from modelscope.pipelines import pipeline
 from modelscope.utils.constant import Tasks
 
 semantic_cls = pipeline(Tasks.text_classification, 'iic/nlp_structbert_emotion-classification_chinese-base', model_revision='v1.0.0')
-#这里可以从外面加一个system_prompt    
-print(semantic_cls(input=''))
+
+def get_emotion(text):
+    return semantic_cls(input=text)
+
