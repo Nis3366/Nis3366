@@ -5,9 +5,10 @@ from pymongo import MongoClient
 import pandas as pd
 from datetime  import timedelta
 from pyecharts import options as opts
+from pyecharts.charts import Pie
 from pyecharts.charts import Map
 import streamlit.components.v1 as components
-
+from Data_management.process_complex_text import get_emotion
 st.title("details")
 
 # 连接到MongoDB
@@ -23,7 +24,6 @@ else:
    topic = st.session_state["details_topics"]
    st.title(f"话题详情: {topic}")
    # 获取集合
-   # collection = db["#东部战区海报毁瘫#"]
    if topic in db.list_collection_names():
          collection = db[topic]
          # 查询所有数据
@@ -89,6 +89,35 @@ else:
    else:
       st.error("数据框中缺少 'publish_time' 列！")
 
+      #这里加情感分析，需要修
+   if 'content_all' in df.columns:
+      df['emotion'] = df['content_all'].apply(get_emotion)
+
+      # 统计每种情感的数量
+      emotion_counts = df['emotion'].value_counts()
+      
+      # 检查数据是否有效
+      if not emotion_counts.empty:
+         # 使用 Series 直接作为数据源
+         pie_chart = (
+               Pie()
+               .add(
+                  "",
+                  [list(z) for z in zip(emotion_counts.index.tolist(), emotion_counts.values.tolist())],
+                  radius=["30%", "75%"],
+               )
+               .set_colors(["#f00", "#0f0", "#00f", "#ff0", "#0ff"])
+               .set_global_opts(title_opts=opts.TitleOpts(title="情感分析结果分布"))
+               .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c} ({d}%)"))
+         )
+
+         # 生成 HTML
+         pie_html = pie_chart.render_embed()
+
+         # 渲染饼状图到 Streamlit
+         components.html(pie_html, height=400)
+      else:
+         st.warning("没有可用于绘制饼状图的情感数据。")
 
    # 标准化省份名称
    df['location'] = df['location'].fillna("未知")  # 处理空值

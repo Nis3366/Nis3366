@@ -5,11 +5,11 @@ import pymongo
 def insert_json_to_mongodb():
     # 1. 连接数据库（请根据实际连接字符串替换）
     client = pymongo.MongoClient("mongodb://localhost:27017/")
-    db = client["myDatabase"]
-    collection = db["myCollection"]
+    db = client["NIS3366"]
+    collection = db["姜萍"]
 
     # 2. 打开并读取 JSON 文件
-    file_path = "Data_management/crawl_result/NIS3366.东部战区.json"
+    file_path = "Data_management/crawl_result/NIS3366.姜萍.json"
     with open(file_path, 'r', encoding='utf-8') as f:
         # 如果 JSON 里有 MongoDB 特殊字段（如 $oid），可用 json_util.loads()
         data = json_util.loads(f.read())
