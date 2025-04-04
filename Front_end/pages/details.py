@@ -14,7 +14,6 @@ st.title("details")
 client = MongoClient('localhost', 27017)
 db = client['NIS3366']
 
-st.title("话题详情")
 
 # 添加刷新按钮
 if st.button("🔄 刷新"):
@@ -30,7 +29,7 @@ if "details_topics" not in st.session_state:
       # 创建一个下拉菜单，供用户选择表名
       topic = st.selectbox("请选择一个话题", collection_names)
       # 显示用户选择的话题
-      st.title(f"话题详情: {topic}")
+      st.title(f"{topic}")
       # 获取用户选择的集合
       collection = db[topic]
       # 查询所有数据
@@ -55,7 +54,7 @@ else:
          # 查询所有数据
          data = list(collection.find())
          df = pd.DataFrame(data)
-         st.write(f"成功访问集合: {topic}")
+         st.title(f"{topic}")
    else:
          st.error(f"集合 '{topic}' 不存在！")
 
@@ -88,101 +87,109 @@ if 'publish_time' in df.columns:
 else:
    st.error("数据框中缺少 'publish_time' 列！")
 
-# 假设你的数据框是 df，并且包含 'content_all' 列
-# if 'content_all' in df.columns:
-#    df['emotion'] = df['content_all'].apply(get_emotion)
-#    if 'publish_time' in df.columns:
-#       # 将时间戳转换为日期格式（如果需要）
-#       df['publish_time'] = pd.to_datetime(df['publish_time'])
-#       df['date'] = df['publish_time'].dt.date  # 按日期分组
-#       emotion_over_time = df.groupby(['date', 'emotion']).size().unstack(fill_value=0)
-#       emotion_over_time = emotion_over_time.div(emotion_over_time.sum(axis=1), axis=0) * 100  # 计算百分比
-      
-#       # 检查数据是否有效
-#       if not emotion_over_time.empty:
-#          line_chart = Line()
-#          for emotion in emotion_over_time.columns:
-#             line_chart.add_xaxis(emotion_over_time.index.astype(str).tolist())
-#             line_chart.add_yaxis(
-#                emotion,
-#                emotion_over_time[emotion].tolist(),
-#                label_opts=opts.LabelOpts(is_show=False),
-#             )
-#          line_chart.set_global_opts(
-#             title_opts=opts.TitleOpts(title="不同情感随时间变化的占比"),
-#             xaxis_opts=opts.AxisOpts(name="时间"),
-#             yaxis_opts=opts.AxisOpts(name="占比 (%)"),
-#             legend_opts=opts.LegendOpts(pos_top="10%"),
-#             tooltip_opts=opts.TooltipOpts(trigger="axis"),
-#          )
-#          line_html = line_chart.render_embed()
-#          components.html(line_html, height=500)
-#       else:
-#          st.warning("没有可用于绘制折线图的情感数据。")
-#    else:
-#       st.warning("数据框中缺少时间戳列 'timestamp'，无法绘制时间变化图。")
-# else:
-#    st.warning("数据框中缺少 'content_all' 列，无法进行情感分析。")
-
 if 'content_all' in df.columns:
-    
+    # 对内容进行情感分析
     df['emotion'] = df['content_all'].apply(get_emotion)
     
     if 'publish_time' in df.columns:
         try:
-            # Convert timestamp and extract date
+            # 转换时间戳并提取日期和小时
             df['publish_time'] = pd.to_datetime(df['publish_time'])
             df['date'] = df['publish_time'].dt.date
+            df['hour'] = df['publish_time'].dt.hour  # 提取小时
             
-            # Ensure we have valid data to work with
+            # 确保数据有效
             if len(df) == 0 or df['emotion'].isnull().all():
-                st.warning("No valid emotion data available.")
+                st.warning("没有可用的有效情感数据。")
             
-            # Debug print
-            st.write("Preview of data before grouping:", df[['date', 'emotion']].head())
+            # 调试信息
+            st.write("预览按小时和按天分组前的数据:", df[['date', 'hour', 'emotion']].head())
             
-            # Group by date and emotion
+            # 按小时分组
             try:
-                emotion_counts = df.groupby(['date', 'emotion']).size()
-                emotion_over_time = emotion_counts.unstack(fill_value=0)
+                # 按小时和情感分组
+                emotion_counts_hour = df.groupby(['hour', 'emotion']).size()
+                emotion_over_time_hour = emotion_counts_hour.unstack(fill_value=0)
                 
-                # Calculate percentages
-                emotion_over_time = emotion_over_time.div(emotion_over_time.sum(axis=1), axis=0) * 100
+                # 计算百分比
+                emotion_over_time_hour = emotion_over_time_hour.div(emotion_over_time_hour.sum(axis=1), axis=0) * 100
                 
-                if not emotion_over_time.empty:
-                    # Create line chart
-                    line_chart = Line()
-                    dates = emotion_over_time.index.astype(str).tolist()
+                if not emotion_over_time_hour.empty:
+                    # 创建按小时的折线图
+                    line_chart_hour = Line()
+                    hours = emotion_over_time_hour.index.astype(str).tolist()
                     
-                    for emotion in emotion_over_time.columns:
-                        line_chart.add_xaxis(dates)
-                        line_chart.add_yaxis(
+                    for emotion in emotion_over_time_hour.columns:
+                        line_chart_hour.add_xaxis(hours)
+                        line_chart_hour.add_yaxis(
                             emotion,
-                            emotion_over_time[emotion].tolist(),
+                            emotion_over_time_hour[emotion].tolist(),
                             label_opts=opts.LabelOpts(is_show=False),
                         )
                     
-                    line_chart.set_global_opts(
-                        title_opts=opts.TitleOpts(title="不同情感随时间变化的占比"),
-                        xaxis_opts=opts.AxisOpts(name="时间"),
+                    line_chart_hour.set_global_opts(
+                        title_opts=opts.TitleOpts(title="不同情感随时间(小时)变化的占比"),
+                        xaxis_opts=opts.AxisOpts(name="小时"),
                         yaxis_opts=opts.AxisOpts(name="占比 (%)"),
                         legend_opts=opts.LegendOpts(pos_top="10%"),
                         tooltip_opts=opts.TooltipOpts(trigger="axis"),
                     )
                     
-                    line_html = line_chart.render_embed()
-                    components.html(line_html, height=500)
+                    line_html_hour = line_chart_hour.render_embed()
+                    st.subheader("按小时的情感变化")
+                    components.html(line_html_hour, height=500)
                 else:
-                    st.warning("没有可用于绘制折线图的情感数据。")
+                    st.warning("没有可用于绘制按小时折线图的情感数据。")
             
             except Exception as e:
-                st.error(f"Error in grouping data: {str(e)}")
-                st.write("Debug info - emotion value counts:", df['emotion'].value_counts())
-                st.write("Debug info - date value counts:", df['date'].value_counts())
+                st.error(f"按小时分组数据时出错: {str(e)}")
+                st.write("调试信息 - 情感值计数:", df['emotion'].value_counts())
+                st.write("调试信息 - 小时值计数:", df['hour'].value_counts())
+            
+            # 按天分组
+            try:
+                # 按天和情感分组
+                emotion_counts_date = df.groupby(['date', 'emotion']).size()
+                emotion_over_time_date = emotion_counts_date.unstack(fill_value=0)
+                
+                # 计算百分比
+                emotion_over_time_date = emotion_over_time_date.div(emotion_over_time_date.sum(axis=1), axis=0) * 100
+                
+                if not emotion_over_time_date.empty:
+                    # 创建按天的折线图
+                    line_chart_date = Line()
+                    dates = emotion_over_time_date.index.astype(str).tolist()
+                    
+                    for emotion in emotion_over_time_date.columns:
+                        line_chart_date.add_xaxis(dates)
+                        line_chart_date.add_yaxis(
+                            emotion,
+                            emotion_over_time_date[emotion].tolist(),
+                            label_opts=opts.LabelOpts(is_show=False),
+                        )
+                    
+                    line_chart_date.set_global_opts(
+                        title_opts=opts.TitleOpts(title="不同情感随时间(天)变化的占比"),
+                        xaxis_opts=opts.AxisOpts(name="日期"),
+                        yaxis_opts=opts.AxisOpts(name="占比 (%)"),
+                        legend_opts=opts.LegendOpts(pos_top="10%"),
+                        tooltip_opts=opts.TooltipOpts(trigger="axis"),
+                    )
+                    
+                    line_html_date = line_chart_date.render_embed()
+                    st.subheader("按天的情感变化")
+                    components.html(line_html_date, height=500)
+                else:
+                    st.warning("没有可用于绘制按天折线图的情感数据。")
+            
+            except Exception as e:
+                st.error(f"按天分组数据时出错: {str(e)}")
+                st.write("调试信息 - 情感值计数:", df['emotion'].value_counts())
+                st.write("调试信息 - 日期值计数:", df['date'].value_counts())
                 
         except Exception as e:
-            st.error(f"Error processing timestamps: {str(e)}")
-            st.write("Sample publish_time values:", df['publish_time'].head().tolist())
+            st.error(f"处理时间戳时出错: {str(e)}")
+            st.write("示例时间戳值:", df['publish_time'].head().tolist())
     else:
         st.warning("数据框中缺少时间戳列 'publish_time'，无法绘制时间变化图。")
 else:
@@ -190,7 +197,6 @@ else:
 
 # 标准化省份名称
 df['location'] = df['location'].fillna("未知")  # 处理空值
-
 # 将非标准名称转换为官方名称
 official_names = {
    "北京": "北京市",
