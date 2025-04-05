@@ -2,11 +2,11 @@ import json
 from DrissionPage import *
 from Front_end.config_front import cookies_config
 from Data_management import get_emotion
-
+"""
 tab = Chromium().latest_tab
 tab.get("https://weibo.com/u/1784473157")
 tab.set.cookies(cookies_config.cookies)
-
+"""
 import pymongo
 # 连接本地 MongoDB
 client = pymongo.MongoClient("mongodb://localhost:27017/")

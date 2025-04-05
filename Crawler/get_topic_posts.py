@@ -208,8 +208,10 @@ def get_topic_posts(search_for:str):
     try:
         loop = asyncio.get_event_loop()
         loop.run_until_complete(downloader._download_all_asyncio())
+        get_all_emotions(search_for)
     except RuntimeError:
         asyncio.run(downloader._download_all_asyncio())
+
 
 def get_topic_posts_line(selected_values:list):
     for topic_content in selected_values:
