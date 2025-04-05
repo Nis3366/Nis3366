@@ -1,4 +1,7 @@
 import sys
+
+from location import get_all_emotions
+
 sys.path.append("")
 
 import time
@@ -152,7 +155,6 @@ class TopicPostsDownloader(BaseCrawler):
         """
         async with httpx.AsyncClient(cookies = cookies_config.cookies,timeout = 20.0 ) as client:
             params = await self._get_request_params(client=client,time_start=time_start, time_end=time_end)
-            print(f"{time_start} - {time_end} : {len(params)}")
             if params == []:
                 return 0
             if len(params) >= 50 and skip:
@@ -175,7 +177,6 @@ class TopicPostsDownloader(BaseCrawler):
             now += timedelta(hours=1)
             now = now.replace(minute=0, second=0, microsecond=0)
         start = now - timedelta(days=365)
-        print(f"{start}")
         time_end = now
         time_interval = ["year","month","day","hour"]
         flag = await self._download_asyncio()
@@ -209,3 +210,9 @@ def get_topic_posts(search_for:str):
         loop.run_until_complete(downloader._download_all_asyncio())
     except RuntimeError:
         asyncio.run(downloader._download_all_asyncio())
+
+def get_topic_posts_line(selected_values:list):
+    for topic_content in selected_values:
+        get_topic_posts(topic_content)
+    get_all_emotions(selected_values)
+    print("爬取完成")

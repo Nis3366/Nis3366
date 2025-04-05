@@ -1,23 +1,16 @@
 import streamlit as st
-from Crawler.get_top_lists import get_top_lists
-from Crawler.get_topic_posts import get_topic_posts
 from pymongo import MongoClient
 import pandas as pd
 from datetime  import timedelta
 from pyecharts import options as opts
 from pyecharts.charts import Pie, Map, Line
 import streamlit.components.v1 as components
-from Data_management.process_complex_text import get_emotion
+from Data_management import get_emotion
 st.title("details")
 
 # 连接到MongoDB
 client = MongoClient('localhost', 27017)
 db = client['NIS3366']
-
-
-# 添加刷新按钮
-if st.button("🔄 刷新"):
-   st.rerun()  # 重新运行应用，模拟刷新效果
 
 if "details_topics" not in st.session_state:
    # 获取数据库中的所有集合名称（表名）
@@ -28,6 +21,7 @@ if "details_topics" not in st.session_state:
    else:
       # 创建一个下拉菜单，供用户选择表名
       topic = st.selectbox("请选择一个话题", collection_names)
+      st.session_state["show"]=topic
       # 显示用户选择的话题
       st.title(f"{topic}")
       # 获取用户选择的集合
@@ -38,7 +32,7 @@ if "details_topics" not in st.session_state:
       df = pd.DataFrame(data)
 else:
    # 从热点页面跳转过来的请求
-   topic = st.session_state["details_topics"]
+   st.session_state["show"] = st.session_state["details_topics"]
    del st.session_state["details_topics"]
    # 获取数据库中的所有集合名称（表名）
    collection_names = db.list_collection_names()
@@ -49,14 +43,14 @@ else:
       # 创建一个下拉菜单，供用户选择表名
       st.selectbox("请选择一个话题", collection_names)
    # 获取集合
-   if topic in db.list_collection_names():
-         collection = db[topic]
+   if st.session_state["show"] in db.list_collection_names():
+         collection = db[st.session_state["show"]]
          # 查询所有数据
          data = list(collection.find())
          df = pd.DataFrame(data)
-         st.title(f"{topic}")
+         st.title(f"{st.session_state["show"]}")
    else:
-         st.error(f"集合 '{topic}' 不存在！")
+         st.error(f"集合 '{st.session_state["show"]}' 不存在！")
 
 if 'publish_time' in df.columns:
    # 将 'publish_time' 转换为 datetime 类型
@@ -89,8 +83,6 @@ else:
 
 if 'content_all' in df.columns:
     # 对内容进行情感分析
-    df['emotion'] = df['content_all'].apply(get_emotion)
-    
     if 'publish_time' in df.columns:
         try:
             # 转换时间戳并提取日期和小时

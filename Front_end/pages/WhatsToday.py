@@ -1,6 +1,8 @@
 import streamlit as st
 from Crawler.get_top_lists import get_top_lists
-from Crawler.get_topic_posts import get_topic_posts
+from Crawler.get_topic_posts import get_topic_posts_line
+import threading
+
 st.title("今日热点")
 if "hot_topics" not in st.session_state:
     st.session_state["hot_topics"] = []
@@ -30,11 +32,12 @@ if st.session_state["hot_topics"]:
                 if st.button("撤销", key=f"untrack_{topic}"):
                     st.session_state["selected_topic"].remove(topic)
                     st.rerun()
-                
+
                 # details 按钮
                 if st.button("详情", key=f"details_{topic}"):
                     # 设置查询参数并跳转到 details.py
-                    st.session_state["details_topics"] = st.session_state["hot_topics"][topic]
+                    #st.session_state["details_topics"] = st.session_state["hot_topics"][topic]
+                    st.session_state["details_topics"] = "#名侦探学院#"
                     st.page_link("pages/details.py", label="跳转到详情")
 
             else:
@@ -49,8 +52,9 @@ selected_values = [st.session_state["hot_topics"][key]
 # 确认按钮
 if st.session_state["hot_topics"]:
     if st.button("确认"):
-        for topic_content in selected_values:
-            get_topic_posts(topic_content)
+        thread=threading.Thread(target=get_topic_posts_line, args=(selected_values,))
+        thread.start()
         st.success("已确认并存入数据库")
-        print(st.session_state["selected_topic"])
+        st.session_state["selected_topic"]=[]
+        st.rerun()
 
