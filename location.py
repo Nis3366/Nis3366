@@ -24,7 +24,7 @@ def get_all_emotions(collection_names):
                 final_emotion = get_emotion(empty_emotion['content_all'])
                 empty_emotion['emotion'] = final_emotion
                 collection.update_one({'_id': empty_emotion['_id']}, {'$set': empty_emotion}, upsert=True)
-
+"""
 for collection in collections:
     collection_obj = db[collection]
     empty_location_docs = collection_obj.find({"location": ""})
@@ -54,3 +54,4 @@ for collection in collections:
             final_emotion = get_emotion(empty_emotion['content_all'])
             empty_emotion['emotion'] = final_emotion
             collection_obj.update_one({'_id': empty_emotion['_id']}, {'$set': empty_emotion}, upsert=True)
+"""
