@@ -15,15 +15,6 @@ db = client["NIS3366"]
 # 选择集合
 collections = db.list_collection_names()
 
-def get_all_emotion(collection_name):
-    collection = db[collection_name]
-    empty_emotions = collection.find({"emotion": {"$exists": False}})
-    for empty_emotion in empty_emotions:
-        if 'emotion' not in empty_emotion:
-            final_emotion = get_emotion(empty_emotion['content_all'])
-            empty_emotion['emotion'] = final_emotion
-            collection.update_one({'_id': empty_emotion['_id']}, {'$set': empty_emotion}, upsert=True)
-
 def get_all_emotions(collection_names):
     for collection_name in collection_names:
         collection = db[collection_name]
@@ -33,9 +24,10 @@ def get_all_emotions(collection_names):
                 final_emotion = get_emotion(empty_emotion['content_all'])
                 empty_emotion['emotion'] = final_emotion
                 collection.update_one({'_id': empty_emotion['_id']}, {'$set': empty_emotion}, upsert=True)
-"""
+
 for collection in collections:
     collection_obj = db[collection]
+    """
     empty_location_docs = collection_obj.find({"location": ""})
     for empty_location_doc in empty_location_docs:
         url="https://weibo.com/u/"+empty_location_doc["uid"]
@@ -55,7 +47,7 @@ for collection in collections:
         except Exception as e:
             print(f"Error: {e}")
             continue
-
+    """
     empty_emotions=collection_obj.find({"emotion": {"$exists": False}})
     for empty_emotion in empty_emotions:
         print(empty_emotion)
@@ -63,4 +55,3 @@ for collection in collections:
             final_emotion = get_emotion(empty_emotion['content_all'])
             empty_emotion['emotion'] = final_emotion
             collection_obj.update_one({'_id': empty_emotion['_id']}, {'$set': empty_emotion}, upsert=True)
-"""

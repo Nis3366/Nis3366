@@ -1,6 +1,6 @@
 import sys
 
-from location import get_all_emotions
+from location import get_all_emotions, get_all_emotion
 
 sys.path.append("")
 
@@ -168,16 +168,21 @@ class TopicPostsDownloader(BaseCrawler):
             await asyncio.gather(*tasks)
         return 1
 
-    async def _download_all_asyncio(self):
+    async def _download_all_asyncio(self,start:Optional[datetime] = None, end:Optional[datetime] = None):
         """下载所有
             Attention: 暂定大致两年内数据
         """
-        now = datetime.now()
-        if now.minute != 0 or now.second != 0 or now.microsecond != 0:
-            now += timedelta(hours=1)
-            now = now.replace(minute=0, second=0, microsecond=0)
-        start = now - timedelta(days=365)
-        time_end = now
+        if end is None:
+            end = datetime.now()
+        if end.minute != 0 or end.second != 0 or end.microsecond != 0:
+            end += timedelta(hours=1)
+            end = end.replace(minute=0, second=0, microsecond=0)
+        if start is None:
+            start = end - timedelta(days=365)
+        if start.minute != 0 or start.second != 0 or start.microsecond != 0:
+            start += timedelta(hours=1)
+            start = start.replace(minute=0, second=0, microsecond=0)
+        time_end = end
         time_interval = ["year","month","day","hour"]
         flag = await self._download_asyncio()
         interval_index = 0
@@ -203,18 +208,18 @@ class TopicPostsDownloader(BaseCrawler):
 
 
 
-def get_topic_posts(search_for:str):
+def get_topic_posts(search_for:str,start:Optional[datetime] = None, end:Optional[datetime] = None):
     downloader = TopicPostsDownloader(search_for=search_for,table_name=search_for)
     try:
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(downloader._download_all_asyncio())
-        get_all_emotions(search_for)
+        loop.run_until_complete(downloader._download_all_asyncio(start=start, end=end))
     except RuntimeError:
-        asyncio.run(downloader._download_all_asyncio())
+        asyncio.run(downloader._download_all_asyncio(start=start, end=end))
+    get_all_emotion(search_for)
+    print("爬取完成")
 
-
-def get_topic_posts_line(selected_values:list):
+def get_topic_posts_line(selected_values:list,start:Optional[datetime] = None, end:Optional[datetime] = None):
     for topic_content in selected_values:
-        get_topic_posts(topic_content)
+        get_topic_posts(topic_content,start=start, end=end)
     get_all_emotions(selected_values)
     print("爬取完成")
