@@ -8,7 +8,6 @@ db = client["NIS3366"]
 # 选择集合
 def insert_one(collection_name: str, document: dict):
     collection = db[collection_name]
-    print(collection_name)
     try:
         collection.update_one({'mblogid': document['mblogid']}, {'$set': document}, upsert=True)
     except json.JSONDecodeError as e:

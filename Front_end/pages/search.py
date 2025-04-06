@@ -1,6 +1,7 @@
+import threading
 import streamlit as st
-from Crawler.get_top_lists import get_top_lists
 from Crawler.get_topic_posts import get_topic_posts
+
 st.title("Explore the Topics You Want to Learn About")
 
 # 添加搜索框
@@ -10,7 +11,8 @@ search_query = st.text_input("请输入搜索内容", placeholder="输入关键�
 if st.button("确认"):
     if search_query: 
         topic_content = search_query
-        get_topic_posts(topic_content)
+        thread=threading.Thread(target=get_topic_posts, args=(topic_content,))
+        thread.start()
         st.success(f"已确认并存入数据库：{topic_content}")
         if "selected_topic" in st.session_state:
             print(st.session_state["selected_topic"])
