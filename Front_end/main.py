@@ -15,7 +15,8 @@ pg = st.navigation({
         st.Page("./pages/search.py",title="搜索", icon=":material/add_circle:"),
     ],
     "数据分析": [
-        st.Page("./pages/details.py", title="details", icon=":material/add_circle:" )
+        st.Page("./pages/details.py", title="数据分析", icon=":material/add_circle:" ),
+        st.Page("./pages/future_analysis.py", title="数据预测", icon=":material/add_circle:"),
     ],
 })
 

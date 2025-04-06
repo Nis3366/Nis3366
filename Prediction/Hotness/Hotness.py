@@ -143,6 +143,64 @@ def load_local_json(filename):
         print(f"Data loading error: {str(e)}")
         return pd.DataFrame()
 
+
+def load_local_df(df_input):
+    """
+    加载并预处理本地JSON数据
+
+    处理流程：
+        1. 检查文件是否存在
+        2. 修复常见JSON格式问题
+        3. 解析并转换为DataFrame
+        4. 数据清洗和过滤
+
+    参数：
+        filename: JSON文件名
+
+    返回：
+        pd.DataFrame: 预处理后的数据集
+    """
+    try:
+        # 校验必需字段
+        required_columns = ['publish_time', 'retweet_num', 'comment_num', 'star_num']
+        # 检查缺失字段
+        missing_cols = [col for col in required_columns if col not in df_input.columns]
+        if missing_cols:
+            print(f"Missing required columns: {missing_cols}")
+            return pd.DataFrame()
+
+        # 数据清洗
+        processed_df = df_input[required_columns].copy()
+
+        # 转换发布时间为datetime类型，错误值设为NaT
+        processed_df['publish_time'] = pd.to_datetime(
+            processed_df['publish_time'],
+            errors='coerce'  # 无效时间转为NaT
+        )
+
+        # 转换数值列，非数值转为0
+        numeric_cols = ['retweet_num', 'comment_num', 'star_num']
+        processed_df[numeric_cols] = processed_df[numeric_cols].apply(
+            pd.to_numeric,
+            errors='coerce'  # 转换失败设为NaN
+        ).fillna(0)
+
+        # 过滤低互动记录
+        if not processed_df.empty:
+            # 计算总互动量（转发+评论+点赞）
+            processed_df['total_interaction'] = processed_df[numeric_cols].sum(axis=1)
+
+            # 仅保留高于平均互动的记录
+            threshold = processed_df['total_interaction'].mean()
+            processed_df = processed_df[processed_df['total_interaction'] >= threshold]
+
+        # 去除无效时间记录
+        return processed_df.dropna(subset=['publish_time'])
+
+    except Exception as e:
+        print(f"Data loading error: {str(e)}")
+        return pd.DataFrame()
+
 def calculate_hotness(data, time_col="publish_time", 
                      metrics=["retweet_num", "comment_num", "star_num"],
                      weights=[0.4, 0.3, 0.3],
@@ -225,20 +283,20 @@ if __name__ == "__main__":
     """
     try:
         # 加载指定话题数据文件（示例文件名为微博话题格式）
-        df = load_local_json("NIS3366.#手机价格不超6000元可获补贴#.json")
+        df_input = load_local_json("NIS3366.#手机价格不超6000元可获补贴#.json")
     except Exception as e:
         print(f"Critical error: {str(e)}")
-        df = pd.DataFrame()
+        df_input = pd.DataFrame()
     
     # 数据有效性检查
-    if df.empty:
+    if df_input.empty:
         print("Failed to load valid data")
     else:
         print("Successfully loaded data samples:")
-        print(df.head(3))  # 展示前3条有效记录
+        print(df_input.head(3))  # 展示前3条有效记录
         
         # 计算热度趋势
-        hotness , _ = calculate_hotness(df)
+        hotness , _ = calculate_hotness(df_input)
         
         # 输出结果
         if not hotness.empty:

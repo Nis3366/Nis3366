@@ -141,7 +141,7 @@ def predict_next_values(model, input_sequence, time_steps=30):
 
 def main():
     # 配置参数
-    DB_PATH = "time_series.db"
+    DB_PATH = "Prediction/time_series.db"
     TABLE_NAME = "hotness_records"  # 替换为实际表名
     TIME_STEPS = 30  # 使用过去30个时间点预测未来5个
     EPOCHS = 50
@@ -165,7 +165,7 @@ def main():
         print("模型训练完成")
         
         # 保存模型和标准化器
-        model.save("lstm_timeseries.h5")
+        model.save("Prediction/lstm_timeseries.h5")
         print("模型已保存为 lstm_timeseries.h5")
         
         # 示例预测

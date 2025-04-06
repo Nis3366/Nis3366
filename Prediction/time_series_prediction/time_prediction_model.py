@@ -1,7 +1,7 @@
 # model.py
 """模型训练模块，整合分段ARIMA参数学习和LSTM模型训练"""
-from Paragraphs_ARIMA import find_segmented_arima_order, load_data_from_db
-from LSTM import main as train_lstm
+from Prediction.time_series_prediction.Paragraphs_ARIMA import find_segmented_arima_order, load_data_from_db
+from Prediction.time_series_prediction.LSTM import main as train_lstm
 import pickle
 
 def train_arima_params():

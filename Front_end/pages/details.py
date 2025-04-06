@@ -6,7 +6,7 @@ from pyecharts import options as opts
 from pyecharts.charts import Pie, Map, Line
 import streamlit.components.v1 as components
 from Data_management import get_emotion
-st.title("details")
+st.title("数据分析")
 
 # 连接到MongoDB
 client = MongoClient('localhost', 27017)

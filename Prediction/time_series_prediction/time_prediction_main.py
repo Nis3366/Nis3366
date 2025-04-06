@@ -3,9 +3,9 @@
 """主预测模块，集成三种模型预测并可视化结果"""
 import numpy as np
 import matplotlib.pyplot as plt
-from Paragraphs_ARIMA import segmented_arima_predict
-from LSTM import predict_next_values, load_data_from_db as lstm_load, preprocess_data
-from ETS import predict_future, train_ets_model
+from Prediction.time_series_prediction.Paragraphs_ARIMA import segmented_arima_predict
+from Prediction.time_series_prediction.LSTM import predict_next_values, load_data_from_db as lstm_load, preprocess_data
+from Prediction.time_series_prediction.ETS import predict_future, train_ets_model
 import pickle
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler

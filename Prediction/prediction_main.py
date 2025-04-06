@@ -2,10 +2,10 @@
 """主预测模块，集成三种模型预测并可视化结果"""
 import numpy as np
 import matplotlib.pyplot as plt
-from time_series_prediction.Paragraphs_ARIMA import segmented_arima_predict
-from time_series_prediction.LSTM import predict_next_values, load_data_from_db as lstm_load, preprocess_data
-from time_series_prediction.ETS import predict_future, train_ets_model
-from Hotness.Hotness import load_local_json, calculate_hotness
+from Prediction.time_series_prediction.Paragraphs_ARIMA import segmented_arima_predict
+from Prediction.time_series_prediction.LSTM import predict_next_values, load_data_from_db as lstm_load, preprocess_data
+from Prediction.time_series_prediction.ETS import predict_future, train_ets_model
+from Prediction.Hotness.Hotness import load_local_df, calculate_hotness
 import pickle
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
@@ -81,22 +81,22 @@ def Comb_plot_prediction(history2, combined_pred, time_window):
     # 添加图表标题
     plt.title(f'Hotness Trend Prediction(Time interval: {time_window})', fontsize=14, pad=20)
     
-    plt.savefig('prediction_result.png', dpi=300, bbox_inches='tight')
+    plt.savefig('Prediction/prediction_result.png', dpi=300, bbox_inches='tight')
     # 显示图表
     ## plt.tight_layout()
     ## plt.show()
 def load_models():
     """加载预训练模型和参数"""
-    with open('best_arima_order.pkl', 'rb') as f:
+    with open('Prediction/best_arima_order.pkl', 'rb') as f:
         arima_order = pickle.load(f)
     
     # 修复：加载 LSTM 模型时明确指定损失函数
     lstm_model = load_model(
-        'lstm_timeseries.h5',
+        'Prediction/lstm_timeseries.h5',
         custom_objects={'mse': losses.mean_squared_error}
     )
     
-    _, _, lstm_scaler = preprocess_data(lstm_load("time_series.db", "hotness_records"))
+    _, _, lstm_scaler = preprocess_data(lstm_load("Prediction/time_series.db", "hotness_records"))
     return arima_order, lstm_model, lstm_scaler
 
 def plot_predictions(history, arima_pred, lstm_pred, ets_pred, time_window):
@@ -147,7 +147,7 @@ def plot_predictions(history, arima_pred, lstm_pred, ets_pred, time_window):
     # plt.tight_layout()
     
     # 保存图像（替换已存在的同名文件）
-    plt.savefig('Multi_prediction_result.png', dpi=300, bbox_inches='tight')
+    plt.savefig('Prediction/Multi_prediction_result.png', dpi=300, bbox_inches='tight')
     ##plt.show()
 
 
@@ -221,8 +221,8 @@ def compute_dynamic_weights(features, seq_array):
     # 归一化处理
     total = sum(final_weights.values())
     return {k: v/total for k, v in final_weights.items()}
-def predict_hotness(json_filename):
-    df = load_local_json(json_filename)
+def predict_hotness(filename):
+    df = load_local_df(filename)
     if df.empty:
         raise ValueError("无效输入数据")
     
@@ -231,7 +231,7 @@ def predict_hotness(json_filename):
         raise ValueError("无法计算热度")
     
     # 生成热度趋势图
-    plot_hotness_trend(hotness_series, time_window, 'hotness_trend.png')
+    plot_hotness_trend(hotness_series, time_window, 'Prediction/hotness_trend.png')
     
     # 调用预测主程序
     input_sequence = hotness_series.tolist()

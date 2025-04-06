@@ -1,6 +1,6 @@
 import sqlite3
 import os
-from Hotness.Hotness import load_local_json, calculate_hotness
+from Prediction.Hotness.Hotness import load_local_json, calculate_hotness
 
 def create_table_if_not_exists(conn):
     """创建数据表，包含length和val1-val1005列"""
