@@ -118,7 +118,7 @@ class TopicPostsDownloader(BaseCrawler):
         url = httpx.URL(url = base_url, params=params)
 
         response = await client.get(url, headers=headers)
-        # print(f"获取第{param}页")
+        print(f"获取第{param}页")
         return response
     
     async def _process_response_asyncio(self, response: httpx.Response, *, param: Any) -> None:
@@ -214,6 +214,7 @@ def get_topic_posts(search_for:str,start:Optional[datetime] = None, end:Optional
         loop = asyncio.get_event_loop()
         loop.run_until_complete(downloader._download_all_asyncio(start=start, end=end))
         get_all_emotions(search_for)
+        print("爬取完成")
     except RuntimeError:
         asyncio.run(downloader._download_all_asyncio(start=start, end=end))
 
