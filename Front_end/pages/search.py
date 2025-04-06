@@ -19,8 +19,6 @@ if st.button("确认"):
             thread=threading.Thread(target=get_topic_posts, args=(topic_content,))
         thread.start()
         st.success(f"已确认并存入数据库：{topic_content}")
-        if "selected_topic" in st.session_state:
-            print(st.session_state["selected_topic"])
     else:
         st.warning("请输入搜索内容！")
 

@@ -1,6 +1,6 @@
 import sys
 
-from location import get_all_emotions
+from location import get_all_emotions, get_all_emotion
 
 sys.path.append("")
 
@@ -213,11 +213,10 @@ def get_topic_posts(search_for:str,start:Optional[datetime] = None, end:Optional
     try:
         loop = asyncio.get_event_loop()
         loop.run_until_complete(downloader._download_all_asyncio(start=start, end=end))
-        get_all_emotions(search_for)
-        print("爬取完成")
     except RuntimeError:
         asyncio.run(downloader._download_all_asyncio(start=start, end=end))
-
+    get_all_emotion(search_for)
+    print("爬取完成")
 
 def get_topic_posts_line(selected_values:list,start:Optional[datetime] = None, end:Optional[datetime] = None):
     for topic_content in selected_values:

@@ -15,6 +15,15 @@ db = client["NIS3366"]
 # 选择集合
 collections = db.list_collection_names()
 
+def get_all_emotion(collection_name):
+    collection = db[collection_name]
+    empty_emotions = collection.find({"emotion": {"$exists": False}})
+    for empty_emotion in empty_emotions:
+        if 'emotion' not in empty_emotion:
+            final_emotion = get_emotion(empty_emotion['content_all'])
+            empty_emotion['emotion'] = final_emotion
+            collection.update_one({'_id': empty_emotion['_id']}, {'$set': empty_emotion}, upsert=True)
+
 def get_all_emotions(collection_names):
     for collection_name in collection_names:
         collection = db[collection_name]
