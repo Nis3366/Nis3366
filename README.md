@@ -43,7 +43,7 @@
 ### 💻 本地直接运行
     conda create -n  NIS3366
     pip install -r requirements.txt
-    python ./Front_end/main.py
+    streamlit run ./Front_end/main.py
 ### 🐳 Docker 运行
     cd ./Nis3366_docker
     # 需要打开本地docker，然后执行下面步骤
