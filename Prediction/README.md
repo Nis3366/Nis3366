@@ -16,7 +16,7 @@
 2./time_series_prediction/LSTM.py中的main函数，其中144行的训练数据库的相对路径关联与168行的预测模型存储的相对路径关联
 
 #### 6.最重要的-prediction_main.py：
-![本地图片](./说明图片/联想截图_20250406025115.png "可选标题")
+![本地图片](说明图片/联想截图_20250406025115.png "可选标题")
 使用方式设计了命令行与函数接口，需预测的json文件放置在Hotness文件夹中，使用时输入相应json文件的文件名（例如 NIS3366.#南大碎尸案#.json），输出结果为三张图片hotness_trend.png,Multi_prediction_result.png,Prediction_result.png.
 **同样的，这部分代码若需在转移后使用,必须需修改其中的相对路径，当前路径为\prediction处的相对路径**
 
